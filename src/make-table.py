@@ -43,6 +43,8 @@ df=mergeDF(df,ACBcalc)
 df=df.drop_duplicates()
 uDF=ppl.unify_score(df,name="Name").rename(columns={"Score":"MajVote"})
 df=mergeDF(df,uDF)
+uDF=ppl.unify_score(df,name="Name",votingAlg=ppl.kieselTest).rename(columns={"Score":"kiesel"})
+df=mergeDF(df,uDF)
 
 df=df.set_index("Name")
 df=df.astype("Int8") # Int8 (with capital 'I') is nullable int type
