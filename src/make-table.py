@@ -2,7 +2,6 @@ import pipeline as ppl
 import pandas as pd
 ppl.args['verbose']=0
 
-
 def getPath(file): # Returns the absolute path to a file, given a path relative to script
     import os
     path = os.path.dirname(os.path.abspath(__file__)) # Gets current path of file
@@ -10,9 +9,9 @@ def getPath(file): # Returns the absolute path to a file, given a path relative 
     return filepath
 
 def mergeDF(df1, df2,diff=False):
-    df_out=df1.merge(df2,on='Name',how='outer') # how='outer'
+    df_out=df1.merge(df2,on='Name',how='outer')
     print(f"{(len(df1)+len(df2))- len(df_out)} out of {len(df2)} rows merged")
-    if diff:
+    if diff: # optionally display unmerged rows
         mask= df1["Name"].isin(df_out["Name"])
         display(df1[~mask])
     return df_out
@@ -22,15 +21,14 @@ df=pd.read_csv(getPath("data/lozano.csv"))
 df["Name"]=df["Name"].replace({"acetaminophen/dichloralphenazone/isometheptene": "acetaminophen"})
 
 bish=pd.read_csv(getPath("data/bishara.csv"))
-bish=bish.rename(columns=lambda x: x[-1])
-
+bish=bish.rename(columns=lambda x: x[-1]) # 'Drugs with AEC score of x' -> 'x'
 
 bish2={"Name":[],"Bishara2020":[]}
 
-for col in bish.columns:
-    vals=bish[col].dropna().str.lower()
-    bish2["Name"].extend(vals)
-    bish2["Bishara2020"].extend([int(col) for _ in range(len(vals))])
+for score in bish.columns:
+    drugName=bish[score].dropna().str.lower()
+    bish2["Name"].extend(drugName)
+    bish2["Bishara2020"].extend([int(score) for _ in drugName])
 
 bish2=pd.DataFrame(bish2)
 df=mergeDF(df,bish2)
