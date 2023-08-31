@@ -17,18 +17,7 @@ def mergeDF(df1, df2,diff=False):
         display(df1[~mask])
     return df_out
 
-lozDict={
-"ACB":"Ancelin2006",
-"ARS":"Rudolph2008",
-"ADS":"Carnahan2006",
-"ABC":"Ancelin2006",
-"AAS":"Ehrt2010",
-"ALS":"Sittironnarit2011",
-"Generic Name":"Name"
-}
-
 df=pd.read_csv(getPath("data/lozano.csv"))
-df=df.rename(columns=lozDict)
 # special case for an odd name from Bishara:
 df["Name"]=df["Name"].replace({"acetaminophen/dichloralphenazone/isometheptene": "acetaminophen"})
 
